@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="基岩版純原版生存伺服器介紹：成就可解、建築機器保護、8000+天存檔、大量生電機器、桃花源・新城・櫻花鎮。">
+  <title>HC基岩伺服器 | 純原版生存 / 成就可解</title>
+  <style>
+    /* ========== 基礎變數與主題 ========== */
+    :root {
+      color-scheme: light dark;
+      --bg: #0b0f14;
+      --bg-soft: #0f1520;
+      --card: #111927;
+      --card-2: #0d141f;
+      --tx: #e6edf3;
+      --tx-2: #c2cbd6;
+      --accent: #7dd3fc;     /* 水藍 */
+      --accent-2: #38bdf8;
+      --ok: #34d399;
+      --warn: #f59e0b;
+      --err: #ef4444;
+      --border: #1f2a37;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 14px;
+      --radius-sm: 10px;
+      --maxw: 1100px;
+    }
+    [data-theme="light"] {
+      --bg: #f6f7fb;
+      --bg-soft: #ffffff;
+      --card: #ffffff;
+      --card-2: #f2f5fa;
+      --tx: #0b1020;
+      --tx-2: #374151;
+      --accent: #2563eb;     /* 藍 */
+      --accent-2: #1d4ed8;
+      --border: #e5e7eb;
+      --shadow: 0 8px 24px rgba(0,0,0,.08);
+    }
+
+    /* ========== 重置與排版 ========== */
+    * { box-sizing: border-box; }
+    html,body { margin:0; padding:0; background: var(--bg); color: var(--tx); font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Heiti TC", "Microsoft JhengHei", Arial, sans-serif; }
+    img { max-width: 100%; display: block; }
+    a { color: var(--accent-2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container { width: min(100% - 32px, var(--maxw)); margin-inline: auto; }
+
+    /* ========== 導覽列 ========== */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      background: color-mix(in oklab, var(--bg-soft) 75%, transparent);
+      backdrop-filter: saturate(140%) blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing:.3px; }
+    .brand .logo {
+      width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--accent) 0%, #a78bfa 100%);
+      color: #0b0f14;
+      font-weight: 900;
+    }
+    .nav-links { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+    .nav-links a { color: var(--tx); text-decoration: none; opacity: .9; font-weight: 600; }
+    .nav-links a:hover { opacity: 1; }
+    .btn {
+      appearance: none; border: 0; padding: 10px 14px; border-radius: 999px;
+      background: var(--accent); color: #001018; font-weight: 800; cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+    .btn:hover { background: var(--accent-2); }
+    .btn.ghost { background: transparent; color: var(--tx); border: 1px solid var(--border); box-shadow: none; }
+    .btn.ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    .theme-toggle {
+      width: 40px; height: 40px; border-radius: 999px; display: grid; place-items:center;
+      border: 1px solid var(--border); background: transparent; color: var(--tx); cursor:pointer;
+    }
+    .theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ========== 首屏 Hero ========== */
+    .hero {
+      position: relative; overflow: hidden;
+      background: radial-gradient(1200px 500px at 80% -30%, color-mix(in oklab, var(--accent) 60%, transparent), transparent 70%),
+                  radial-gradient(1000px 500px at 10% 0, color-mix(in oklab, #a78bfa 40%, transparent), transparent 70%),
+                  linear-gradient(180deg, var(--bg-soft), var(--bg));
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-inner { display: grid; grid-template-columns: 1.2fr .8fr; gap: 20px; align-items: center; padding: 42px 0 28px; }
+    @media (max-width: 900px){ .hero-inner { grid-template-columns: 1fr; padding: 28px 0 16px; } }
+    .hero h1 { font-size: clamp(28px, 4vw, 44px); margin: 6px 0 12px; line-height: 1.12; }
+    .hero p.lead { color: var(--tx-2); font-size: clamp(15px, 1.7vw, 18px); margin: 0 0 16px; }
+    .hero-actions { display:flex; gap:12px; flex-wrap: wrap; margin-top: 8px; }
+    .hero-visual {
+      aspect-ratio: 16/9; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+    .tag { display: inline-flex; gap:8px; align-items: center; padding: 4px 10px; border-radius: 999px; background: var(--card-2); border:1px solid var(--border); color: var(--tx-2); font-weight:700; font-size: 13px; }
+
+    /* ========== 特色區塊 ========== */
+    section { padding: 42px 0; }
+    .section-title { display:flex; justify-content: space-between; align-items: end; gap:12px; margin-bottom: 16px; }
+    .cards { display:grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+    .card {
+      grid-column: span 4; background: var(--card); border:1px solid var(--border); border-radius: var(--radius);
+      padding: 18px; box-shadow: var(--shadow); min-height: 140px; display:flex; flex-direction: column; gap: 8px;
+    }
+    @media (max-width: 900px){ .card { grid-column: span 6; } }
+    @media (max-width: 640px){ .card { grid-column: span 12; } }
+    .card h3 { margin: 0 0 4px; font-size: 18px; }
+    .muted { color: var(--tx-2); }
+    .kpi { font-weight: 900; font-size: 32px; letter-spacing: .3px; }
+
+    /* ========== 城鎮與相簿 ========== */
+    .town { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; align-items: start; margin-top: 10px; }
+    @media (max-width: 900px){ .town { grid-template-columns: 1fr; } }
+    .town .summary {
+      background: var(--card); border:1px solid var(--border); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow);
+    }
+    .town h3 { margin: 0 0 8px; }
+    .list { margin: 6px 0 0 18px; }
+    .list li { margin: 6px 0; }
+    .badge { display:inline-block; padding: 2px 10px; border-radius: 999px; border:1px solid var(--border); background: var(--card-2); color: var(--tx-2); font-size: 12px; font-weight: 700; }
+
+    /* 橫向自動捲動相簿 */
+    .carousel {
+      overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+      display: flex; gap: 12px; padding-bottom: 8px; border-bottom: 1px dashed var(--border);
+    }
+    .carousel::-webkit-scrollbar { height: 10px; }
+    .carousel::-webkit-scrollbar-thumb { background: color-mix(in oklab, var(--tx-2) 30%, transparent); border-radius: 999px; }
+    .slide {
+      scroll-snap-align: center;
+      flex: 0 0 min(82%, 560px); position: relative; border:1px solid var(--border);
+      border-radius: var(--radius-sm); overflow: hidden; background: #000;
+      box-shadow: var(--shadow);
+    }
+    .slide img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 16/9; }
+    .slide .cap {
+      position: absolute; left: 8px; bottom: 8px;
+      background: color-mix(in oklab, var(--bg) 75%, transparent);
+      border: 1px solid var(--border); backdrop-filter: blur(6px);
+      color: var(--tx); padding: 6px 10px; border-radius: 8px; font-size: 12px; font-weight: 700;
+    }
+    .slide .cap small { display:block; color: var(--tx-2); font-weight:600; margin-top:2px; }
+
+    /* ========== 加入/FAQ/頁腳 ========== */
+    .cta {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: center;
+      background: var(--card); border:1px solid var(--border); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow);
+    }
+    @media (max-width: 900px){ .cta { grid-template-columns: 1fr; } }
+    .copy {
+      display:flex; gap: 8px; align-items: center; background: var(--card-2); border:1px dashed var(--border);
+      padding: 8px; border-radius: 10px;
+    }
+    .faq { display:grid; gap: 10px; }
+    .qa { background: var(--card); border:1px solid var(--border); border-radius: var(--radius); padding: 14px; }
+    .qa h4 { margin: 0 0 6px; }
+
+    .footer { padding: 32px 0; border-top: 1px solid var(--border); color: var(--tx-2); }
+    .top-btn {
+      position: fixed; right: 16px; bottom: 16px; z-index: 40;
+      width: 44px; height: 44px; border-radius: 999px; border: 1px solid var(--border);
+      background: var(--card); color: var(--tx); display: grid; place-items: center; cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+    .top-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* 無動作偏好：停用自動播放 */
+    @media (prefers-reduced-motion: reduce) {
+      .carousel { scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 導覽列 -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand">
+        <div class="logo">⛏️</div>
+        <div>
+          <div style="font-size:15px; opacity:.8;">Minecraft Bedrock</div>
+          <div style="font-size:18px;">桃源基岩伺服器</div>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="#features">特色</a>
+        <a href="#towns">城鎮</a>
+        <a href="#join">加入</a>
+        <a href="#faq">FAQ</a>
+        <a class="btn" href="https://discord.gg/d73JnBQksg" target="_blank" rel="noopener">加入 Discord</a>
+        <button id="themeToggle" class="theme-toggle" aria-label="切換主題" title="切換深/淺色">🌓</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 首屏 -->
+  <header class="hero">
+    <div class="container hero-inner">
+      <div>
+        <span class="tag">純原版生存 · 成就可解 · 24/7</span>
+        <h1>一起在 8000+ 天的世界裡，蓋城鎮、搞生電、寫下你的冒險</h1>
+        <p class="lead">
+          伺服器以「純原版無作弊」為核心，提供友善的建築/機器保護與成熟的工業生電環境。
+          三大城鎮——桃花源、新城、櫻花鎮——等你探索與擴張。
+        </p>
+        <div class="hero-actions">
+          <a class="btn" href="https://discord.gg/d73JnBQksg" target="_blank" rel="noopener">立刻加入 Discord</a>
+          <a class="btn ghost" href="#towns">看看城鎮風貌</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <!-- 首屏示意圖：可替換 -->
+        <img src="桃花源3.png" alt="桃花源城鎮遠景與五重塔" loading="eager">
+      </div>
+    </div>
+  </header>
+
+  <!-- 特色 -->
+  <section id="features" class="container">
+    <div class="section-title">
+      <h2>伺服器特色</h2>
+      <span class="badge">Bedrock Edition</span>
+    </div>
+    <div class="cards">
+      <article class="card">
+        <h3>純原版生存，成就可解</h3>
+        <p class="muted">無外掛、無作弊，原汁原味的挑戰與成就感。</p>
+        <div class="kpi" data-counter="days" data-value="8000">0</div>
+        <div class="muted">世界存檔天數+</div>
+      </article>
+      <article class="card">
+        <h3>友善建築/機器保護</h3>
+        <p class="muted">領地與紅石機器保護，防止惡意破壞；管理團隊定期巡檢。</p>
+      </article>
+      <article class="card">
+        <h3>大量工業生電</h3>
+        <p class="muted">刷怪塔、鐵農、金農、竹/甘蔗/海帶全自動，集中倉儲與物流匯流。</p>
+      </article>
+      <article class="card">
+        <h3>社群活躍</h3>
+        <p class="muted">Discord 同步公告、新手指引與建築分享，活動舉辦。</p>
+      </article>
+      <article class="card">
+        <h3>效能與穩定</h3>
+        <p class="muted">伺服器針對 Tick/實體/紅石調校，提供流暢體驗。</p>
+      </article>
+      <article class="card">
+        <h3>玩家導向規範</h3>
+        <p class="muted">尊重建築、拒絕破壞；鼓勵合作、大型公共計畫與風格統整。</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 城鎮 -->
+  <section id="towns" class="container">
+    <div class="section-title">
+      <h2>城鎮巡禮</h2>
+      <span class="badge">桃花源 · 新城 · 櫻花鎮</span>
+    </div>
+
+    <!-- 桃花源 -->
+    <div class="town">
+      <div class="summary">
+        <h3>桃花源</h3>
+        <p class="muted">
+          建於遊戲日第 2983 天，以日式建築風格打造的山城。上方為科技工業區，涵蓋多座生電機器與集中式物資中樞。
+        </p>
+        <ul class="list">
+          <li>新增與優化：櫻花大道與觀景步道、夜景氣氛照明、地底冰道快線。</li>
+          <li>工業擴建：大型分類倉庫，320熔爐組，重組樹場等。</li>
+          <li>保護完善：古建聚落與紅石機器皆受保護。</li>
+        </ul>
+      </div>
+      <div>
+        <div class="carousel" data-autoplay="true" aria-label="桃花源 圖片相簿">
+          <figure class="slide">
+            <img src="桃花源1.png" alt="桃花源遠景與櫻花林">
+            <figcaption class="cap">桃花源 · 遠景 <small>檔名：桃花源1.png</small></figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="桃花源2.png" alt="桃花源櫻花樹下的寺院與高塔">
+            <figcaption class="cap">桃花源 · 櫻雲 <small>檔名：桃花源2.png</small></figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="桃花源3.png" alt="桃花源街道與庭院">
+            <figcaption class="cap">桃花源 · 街景 <small>檔名：桃花源3.png</small></figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+
+    <!-- 新城 -->
+    <div class="town">
+      <div class="summary">
+        <h3>新城</h3>
+        <p class="muted">
+          從舊城重建而來的最大規模城鎮，主打輕工業與小型建築群，環境整齊、機能完善。
+        </p>
+        <ul class="list">
+          <li>後續擴充：中央空地及繁榮、住宅區、中型生電機器</li>
+          <li>產業規劃：蜂農/羊毛色帶工廠/石材自動化，打造基建材料供應鏈。</li>
+          <li>交通樞紐：位於桃花源與櫻花鎮之間，交通運輸方便</li>
+          <li>社群空間：留言牆告示牌、玩家市集、中式建築。</li>
+        </ul>
+      </div>
+      <div>
+        <div class="carousel" data-autoplay="true" aria-label="新城 圖片相簿">
+          <figure class="slide">
+            <img src="新城1.png" alt="新城公園與竹林、花海">
+            <figcaption class="cap">新城 · 公園 <small>檔名：xincheng-1.png</small></figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="新城2.png" alt="新城住宅區與廣場">
+            <figcaption class="cap">新城 · 住宅 <small>檔名：xincheng-2.png</small></figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="新城3.png" alt="新城遠望與塔樓">
+            <figcaption class="cap">新城 · 遠景 <small>檔名：xincheng-3.png</small></figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+
+    <!-- 櫻花鎮 -->
+    <div class="town">
+      <div class="summary">
+        <h3>櫻花鎮</h3>
+        <p class="muted">
+          新進玩家近期建立的濱海櫻花系小鎮，多為剛加入的新手聚落，風景優美、生活機能齊備。
+        </p>
+        <ul class="list">
+          <li>新手友善：留言板、基本倉庫、公共農田與釣魚平台。</li>
+          <li>學習路線：紅石入門交流區、領地嚼劉、素材共同收集。</li>
+          <li>海岸魅力：濱海觀景台、櫻木碼頭與海上建築、夜間燈光步道。</li>
+          <li>發展藍圖：海上刷怪塔、沿岸景色、住宅櫻花塔及各種房屋。</li>
+        </ul>
+      </div>
+      <div>
+        <div class="carousel" data-autoplay="true" aria-label="櫻花鎮 圖片相簿">
+          <figure class="slide">
+            <img src="櫻花鎮1.png" alt="櫻花鎮五重塔與海岸步道">
+            <figcaption class="cap">櫻花鎮 · 濱海塔群 <small>檔名：sakura-1.png</small></figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="櫻花鎮2.png" alt="櫻花鎮空拍與現代建築群">
+            <figcaption class="cap">櫻花鎮 · 海景空拍 <small>檔名：sakura-2.png</small></figcaption>
+          </figure>
+          <figure class="slide">
+            <img src="櫻花鎮3.png" alt="櫻花鎮全景與海灣">
+            <figcaption class="cap">櫻花鎮 · 全景 <small>檔名：sakura-3.png</small></figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 加入我們 -->
+  <section id="join" class="container">
+    <div class="section-title">
+      <h2>加入我們</h2>
+      <span class="badge">一起開拓、建造、紀錄</span>
+    </div>
+    <div class="cta">
+      <div>
+        <h3>Discord 社群</h3>
+        <p class="muted">最新公告、申請入服、建築分享與技術交流，都在這裡：</p>
+        <p>
+          <a class="btn" href="https://discord.gg/d73JnBQksg" target="_blank" rel="noopener">前往 Discord</a>
+        </p>
+      </div>
+      <div>
+        <h3>伺服器連線</h3>
+        <p class="muted">請加入來獲取IP或連結</p>
+        <div class="copy">
+          <span>IP：</span>
+          <code id="ipText">None</code>
+          <button class="btn ghost" id="copyIp">複製</button>
+        </div>
+        <div class="copy" style="margin-top:8px;">
+          <span>Port：</span>
+          <code id="portText">None</code>
+          <button class="btn ghost" id="copyPort">複製</button>
+        </div>
+        <small class="muted">平台：Minecraft Bedrock（行動/Windows/主機皆可）</small>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="container">
+    <div class="section-title">
+      <h2>常見問題</h2>
+      <span class="badge">FAQ</span>
+    </div>
+    <div class="faq">
+      <div class="qa">
+        <h4>Q：是否為純原版？成就能解嗎？</h4>
+        <p class="muted">A：是。無作弊無指令干預，成就可正常解鎖。</p>
+      </div>
+      <div class="qa">
+        <h4>Q：如何保護我的建築與機器？</h4>
+        <p class="muted">A：提供領地/保護系統與巡檢；若遭到破壞，管理可協助回溯與處理。</p>
+      </div>
+      <div class="qa">
+        <h4>Q：可以蓋紅石大型機器嗎？會不會卡？</h4>
+        <p class="muted">A：歡迎！請遵守效率與載入規範，並與管理討論最佳化方案（分時啟動、整合倉儲等）。</p>
+      </div>
+      <div class="qa">
+        <h4>Q：新手可以從哪裡開始？</h4>
+        <p class="muted">A：建議到「新城」領補給，跟著玩家熟悉保護、倉儲與交通網。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 頁腳 -->
+  <footer class="footer">
+    <div class="container">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap: wrap;">
+        <div>© <span id="year"></span> 桃源基岩伺服器 · 一起把世界變好看</div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <a href="https://discord.gg/d73JnBQksg" target="_blank" rel="noopener">Discord</a>
+          <button id="themeToggle2" class="theme-toggle" aria-label="切換主題" title="切換深/淺色">🌓</button>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 回到頂部 -->
+  <button class="top-btn" id="backTop" title="回到頂部">↑</button>
+
+  <script>
+    // ========== 主題切換 ==========
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedTheme = localStorage.getItem('theme');
+    const applyTheme = (mode) => {
+      if (mode === 'light') document.documentElement.setAttribute('data-theme', 'light');
+      else document.documentElement.removeAttribute('data-theme'); // 預設深色
+      localStorage.setItem('theme', mode);
+    };
+    if (savedTheme === 'light') applyTheme('light');
+    else if (savedTheme === 'dark') applyTheme('dark');
+    else applyTheme(prefersDark ? 'dark' : 'light'); // 初始以系統
+
+    const toggleTheme = () => {
+      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+      applyTheme(isLight ? 'dark' : 'light');
+    };
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+    document.getElementById('themeToggle2').addEventListener('click', toggleTheme);
+
+    // ========== 自動捲動橫向相簿 ==========
+    // 對每個 .carousel 啟用自動播放（可滑動 / 可滑鼠暫停 / 末端回到開頭）
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('.carousel[data-autoplay="true"]').forEach((el) => {
+      let timer = null;
+      let paused = false;
+
+      const step = () => {
+        if (paused) return;
+        const max = el.scrollWidth - el.clientWidth;
+        const next = el.scrollLeft + Math.max(240, Math.min(560, el.clientWidth * 0.8));
+        if (next >= max - 5) {
+          el.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          el.scrollTo({ left: next, behavior: 'smooth' });
+        }
+      };
+
+      const start = () => {
+        if (reduceMotion) return;
+        clearInterval(timer);
+        timer = setInterval(step, 3500);
+      };
+      const stop = () => { clearInterval(timer); };
+
+      el.addEventListener('mouseenter', () => { paused = true; });
+      el.addEventListener('mouseleave', () => { paused = false; });
+      el.addEventListener('pointerdown', () => { paused = true; });
+      el.addEventListener('pointerup', () => { paused = false; });
+
+      start();
+      // 視窗大小改變時重新計時
+      window.addEventListener('resize', () => { start(); }, { passive: true });
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stop(); else start();
+      });
+    });
+
+    // ========== 計數動畫 ==========
+    const animateCounter = (el, target, duration = 1200) => {
+      const start = performance.now();
+      const from = 0;
+      const run = (now) => {
+        const p = Math.min(1, (now - start) / duration);
+        const val = Math.floor(from + (target - from) * (1 - Math.pow(1 - p, 3))); // easeOutCubic
+        el.textContent = val.toLocaleString();
+        if (p < 1) requestAnimationFrame(run);
+      };
+      requestAnimationFrame(run);
+    };
+    const daysEl = document.querySelector('[data-counter="days"]');
+    if (daysEl) animateCounter(daysEl, Number(daysEl.dataset.value || 8000));
+
+    // ========== 複製 IP/Port ==========
+    const copyBtn = (btnId, targetId) => {
+      const btn = document.getElementById(btnId);
+      const text = document.getElementById(targetId);
+      btn?.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(text.textContent.trim());
+          btn.textContent = '已複製 ✓';
+          setTimeout(() => btn.textContent = '複製', 1200);
+        } catch (e) {
+          alert('複製失敗，請手動選取文字。');
+        }
+      });
+    };
+    copyBtn('copyIp', 'ipText');
+    copyBtn('copyPort', 'portText');
+
+    // ========== 回到頂部 ==========
+    const backTop = document.getElementById('backTop');
+    backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
