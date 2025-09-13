@@ -15,7 +15,7 @@
       --card-2: #0d141f;
       --tx: #e6edf3;
       --tx-2: #c2cbd6;
-      --accent: #7dd3fc;     /* 水藍 */
+      --accent: #7dd3fc;      /* 水藍 */
       --accent-2: #38bdf8;
       --ok: #34d399;
       --warn: #f59e0b;
@@ -33,7 +33,7 @@
       --card-2: #f2f5fa;
       --tx: #0b1020;
       --tx-2: #374151;
-      --accent: #2563eb;     /* 藍 */
+      --accent: #2563eb;      /* 藍 */
       --accent-2: #1d4ed8;
       --border: #e5e7eb;
       --shadow: 0 8px 24px rgba(0,0,0,.08);
@@ -41,11 +41,13 @@
 
     /* ========== 重置與排版 ========== */
     * { box-sizing: border-box; }
-    html,body { margin:0; padding:0; background: var(--bg); color: var(--tx); font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Heiti TC", "Microsoft JhengHei", Arial, sans-serif; }
+    html,body { margin:0; padding:0; background: var(--bg); color: var(--tx); font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Heiti TC", "Microsoft JhengHei", Arial, sans-serif; line-height: 1.6;}
     img { max-width: 100%; display: block; }
     a { color: var(--accent-2); text-decoration: none; }
     a:hover { text-decoration: underline; }
     .container { width: min(100% - 32px, var(--maxw)); margin-inline: auto; }
+    h1, h2, h3, h4 { margin-top: 0; }
+    p { margin-top: 0; margin-bottom: 1em; }
 
     /* ========== 導覽列 ========== */
     .nav {
@@ -69,49 +71,126 @@
       appearance: none; border: 0; padding: 10px 14px; border-radius: 999px;
       background: var(--accent); color: #001018; font-weight: 800; cursor: pointer;
       box-shadow: var(--shadow);
+      transition: background .2s ease, transform .2s ease;
     }
-    .btn:hover { background: var(--accent-2); }
+    .btn:hover { background: var(--accent-2); transform: translateY(-2px); }
     .btn.ghost { background: transparent; color: var(--tx); border: 1px solid var(--border); box-shadow: none; }
-    .btn.ghost:hover { border-color: var(--accent); color: var(--accent); }
+    .btn.ghost:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
 
     .theme-toggle {
       width: 40px; height: 40px; border-radius: 999px; display: grid; place-items:center;
       border: 1px solid var(--border); background: transparent; color: var(--tx); cursor:pointer;
+      transition: color .2s ease, border-color .2s ease;
     }
     .theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
 
     /* ========== 首屏 Hero ========== */
     .hero {
-      position: relative; overflow: hidden;
-      background: radial-gradient(1200px 500px at 80% -30%, color-mix(in oklab, var(--accent) 60%, transparent), transparent 70%),
-                  radial-gradient(1000px 500px at 10% 0, color-mix(in oklab, #a78bfa 40%, transparent), transparent 70%),
-                  linear-gradient(180deg, var(--bg-soft), var(--bg));
-      border-bottom: 1px solid var(--border);
+      position: relative;
+      min-height: 100vh; /* 填滿整個視窗高度 */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--bg); /* 預設背景色 */
+      overflow: hidden;
+      padding: 80px 0; /* 增加上下 padding 以防內容被導覽列遮擋 */
     }
-    .hero-inner { display: grid; grid-template-columns: 1.2fr .8fr; gap: 20px; align-items: center; padding: 42px 0 28px; }
-    @media (max-width: 900px){ .hero-inner { grid-template-columns: 1fr; padding: 28px 0 16px; } }
-    .hero h1 { font-size: clamp(28px, 4vw, 44px); margin: 6px 0 12px; line-height: 1.12; }
-    .hero p.lead { color: var(--tx-2); font-size: clamp(15px, 1.7vw, 18px); margin: 0 0 16px; }
-    .hero-actions { display:flex; gap:12px; flex-wrap: wrap; margin-top: 8px; }
+    .hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('桃花源3.png'); /* 替換成您希望作為背景的圖片 */
+        background-size: cover; /* 確保圖片覆蓋整個區塊 */
+        background-position: center; /* 圖片置中 */
+        background-attachment: fixed; /* 視差效果 */
+        z-index: 0;
+        opacity: 0.5; /* 調整背景圖片的透明度 */
+    }
+    .hero-inner {
+      position: relative; /* 讓內容在背景圖片之上 */
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 20px;
+      align-items: center;
+      padding: 42px 0 28px;
+      max-width: var(--maxw); /* 限制內容寬度 */
+      margin: 0 auto; /* 內容居中 */
+      text-align: center; /* 預設置中，因應單欄佈局 */
+    }
+    @media (max-width: 900px){
+      .hero-inner { grid-template-columns: 1fr; padding: 28px 0 16px; }
+      .hero::before { opacity: 0.4; } /* 小螢幕上背景圖透明度可微調 */
+    }
+    .hero h1 { font-size: clamp(32px, 5vw, 56px); margin: 6px 0 12px; line-height: 1.12; }
+    .hero p.lead { color: var(--tx-2); font-size: clamp(16px, 2vw, 20px); margin: 0 0 16px; max-width: 700px; margin-left: auto; margin-right: auto;}
+    .hero-actions { display:flex; gap:12px; flex-wrap: wrap; margin-top: 8px; justify-content: center; }
     .hero-visual {
       aspect-ratio: 16/9; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border);
       box-shadow: var(--shadow);
+      opacity: 0; /* 初始隱藏，待動畫出現 */
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
     }
-    .tag { display: inline-flex; gap:8px; align-items: center; padding: 4px 10px; border-radius: 999px; background: var(--card-2); border:1px solid var(--border); color: var(--tx-2); font-weight:700; font-size: 13px; }
+    .hero-visual.is-visible { opacity: 1; transform: translateY(0); }
+    .tag { display: inline-flex; gap:8px; align-items: center; padding: 4px 10px; border-radius: 999px; background: var(--card-2); border:1px solid var(--border); color: var(--tx-2); font-weight:700; font-size: 13px; margin-bottom: 12px;}
 
     /* ========== 特色區塊 ========== */
-    section { padding: 42px 0; }
-    .section-title { display:flex; justify-content: space-between; align-items: end; gap:12px; margin-bottom: 16px; }
-    .cards { display:grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
-    .card {
-      grid-column: span 4; background: var(--card); border:1px solid var(--border); border-radius: var(--radius);
-      padding: 18px; box-shadow: var(--shadow); min-height: 140px; display:flex; flex-direction: column; gap: 8px;
+    section { padding: 80px 0; } /* 增加 section 的上下 padding */
+    .section-title {
+      display:flex; justify-content: space-between; align-items: end; gap:12px; margin-bottom: 48px; /* 增加標題下方間距 */
+      flex-wrap: wrap; /* 確保在小螢幕上換行 */
     }
-    @media (max-width: 900px){ .card { grid-column: span 6; } }
-    @media (max-width: 640px){ .card { grid-column: span 12; } }
-    .card h3 { margin: 0 0 4px; font-size: 18px; }
-    .muted { color: var(--tx-2); }
-    .kpi { font-weight: 900; font-size: 32px; letter-spacing: .3px; }
+    .section-title h2 { font-size: clamp(24px, 3vw, 36px); }
+
+    /* 特色區塊左右交替佈局 */
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr; /* 預設為單欄 */
+      gap: 48px; /* 增加區塊間的間距 */
+    }
+    .feature-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr; /* 預設左右兩欄 */
+      gap: 40px;
+      align-items: center;
+      opacity: 0; /* 初始隱藏 */
+      transform: translateY(30px);
+      transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    }
+    .feature-item.is-visible { opacity: 1; transform: translateY(0); }
+    .feature-item.reverse { grid-template-columns: 1fr 1fr; } /* 確保反轉時也是兩欄 */
+    .feature-item.reverse .feature-content { order: 2; }
+    .feature-item.reverse .feature-image { order: 1; }
+
+    /* 針對小螢幕將佈局改為單欄 */
+    @media (max-width: 900px) {
+      .feature-item { grid-template-columns: 1fr; }
+      .feature-item.reverse .feature-content, .feature-item .feature-content { order: 2; } /* 內容總是在圖片下方 */
+      .feature-item.reverse .feature-image, .feature-item .feature-image { order: 1; margin-bottom: 20px; } /* 圖片在內容上方 */
+    }
+
+    .feature-image img {
+      width: 100%;
+      height: auto;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease-in-out;
+    }
+    .feature-item:hover .feature-image img {
+      transform: scale(1.03); /* 懸停放大效果 */
+    }
+
+    .feature-content {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .feature-content h3 { font-size: clamp(20px, 2.5vw, 28px); }
+    .feature-content p { color: var(--tx-2); }
 
     /* ========== 城鎮與相簿 ========== */
     .town { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; align-items: start; margin-top: 10px; }
@@ -119,8 +198,8 @@
     .town .summary {
       background: var(--card); border:1px solid var(--border); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow);
     }
-    .town h3 { margin: 0 0 8px; }
-    .list { margin: 6px 0 0 18px; }
+    .town h3 { margin: 0 0 8px; font-size: clamp(18px, 2vw, 24px); }
+    .list { margin: 6px 0 0 18px; padding-left: 1em; }
     .list li { margin: 6px 0; }
     .badge { display:inline-block; padding: 2px 10px; border-radius: 999px; border:1px solid var(--border); background: var(--card-2); color: var(--tx-2); font-size: 12px; font-weight: 700; }
 
@@ -128,21 +207,26 @@
     .carousel {
       overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
       display: flex; gap: 12px; padding-bottom: 8px; border-bottom: 1px dashed var(--border);
+      margin-top: 10px; /* 增加與上方內容的間距 */
     }
     .carousel::-webkit-scrollbar { height: 10px; }
     .carousel::-webkit-scrollbar-thumb { background: color-mix(in oklab, var(--tx-2) 30%, transparent); border-radius: 999px; }
     .slide {
       scroll-snap-align: center;
-      flex: 0 0 min(82%, 560px); position: relative; border:1px solid var(--border);
+      flex: 0 0 min(82%, 560px); /* 調整單張圖片的寬度 */
+      position: relative; border:1px solid var(--border);
       border-radius: var(--radius-sm); overflow: hidden; background: #000;
       box-shadow: var(--shadow);
+      transition: transform 0.3s ease; /* 滑動時的平滑過渡 */
     }
+    .slide:hover { transform: translateY(-5px); } /* 懸停時輕微上移 */
     .slide img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 16/9; }
     .slide .cap {
       position: absolute; left: 8px; bottom: 8px;
       background: color-mix(in oklab, var(--bg) 75%, transparent);
       border: 1px solid var(--border); backdrop-filter: blur(6px);
       color: var(--tx); padding: 6px 10px; border-radius: 8px; font-size: 12px; font-weight: 700;
+      z-index: 10; /* 確保文字在圖片之上 */
     }
     .slide .cap small { display:block; color: var(--tx-2); font-weight:600; margin-top:2px; }
 
@@ -156,28 +240,33 @@
       display:flex; gap: 8px; align-items: center; background: var(--card-2); border:1px dashed var(--border);
       padding: 8px; border-radius: 10px;
     }
+    .copy code { font-family: monospace; background: var(--bg); padding: 4px 8px; border-radius: 4px; }
     .faq { display:grid; gap: 10px; }
     .qa { background: var(--card); border:1px solid var(--border); border-radius: var(--radius); padding: 14px; }
-    .qa h4 { margin: 0 0 6px; }
+    .qa h4 { margin: 0 0 6px; font-size: 16px; }
+    .qa p { margin-bottom: 0; }
 
-    .footer { padding: 32px 0; border-top: 1px solid var(--border); color: var(--tx-2); }
+    .footer { padding: 32px 0; border-top: 1px solid var(--border); color: var(--tx-2); font-size: 14px; }
+    .footer .container { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
     .top-btn {
       position: fixed; right: 16px; bottom: 16px; z-index: 40;
       width: 44px; height: 44px; border-radius: 999px; border: 1px solid var(--border);
       background: var(--card); color: var(--tx); display: grid; place-items: center; cursor: pointer;
       box-shadow: var(--shadow);
+      transition: color .2s ease, border-color .2s ease, transform .2s ease;
     }
-    .top-btn:hover { color: var(--accent); border-color: var(--accent); }
+    .top-btn:hover { color: var(--accent); border-color: var(--accent); transform: translateY(-3px); }
 
     /* 無動作偏好：停用自動播放 */
     @media (prefers-reduced-motion: reduce) {
       .carousel { scroll-behavior: auto !important; }
+      .hero-visual, .feature-item, .feature-image img, .slide { transition: none !important; }
+      .top-btn { transform: none !important; }
     }
   </style>
 </head>
 <body>
 
-  <!-- 導覽列 -->
   <nav class="nav">
     <div class="container nav-inner">
       <div class="brand">
@@ -198,15 +287,14 @@
     </div>
   </nav>
 
-  <!-- 首屏 -->
-  <header class="hero">
-    <div class="container hero-inner">
+  <header class="hero" id="home">
+    <div class="hero-inner">
       <div>
         <span class="tag">純原版生存 · 成就可解 · 24/7</span>
         <h1>一起在 8500+ 天的世界裡，蓋城鎮、搞生電、寫下你的冒險</h1>
         <p class="lead">
           伺服器以「純原版無作弊」為核心，提供友善的建築/機器保護與成熟的工業生電環境。
-          三大城鎮——桃花源、新城、櫻花鎮——等你探索與擴張。
+          三<span class="no-wrap">大城鎮——桃花源、新城、櫻花鎮——</span>等你探索與擴張。
         </p>
         <div class="hero-actions">
           <a class="btn" href="https://discord.gg/d73JnBQksg" target="_blank" rel="noopener">立刻加入 Discord</a>
@@ -214,56 +302,71 @@
         </div>
       </div>
       <div class="hero-visual">
-        <!-- 首屏示意圖：可替換 -->
         <img src="桃花源3.png" alt="桃花源城鎮遠景與五重塔" loading="eager">
       </div>
     </div>
   </header>
 
-  <!-- 特色 -->
-  <section id="features" class="container">
-    <div class="section-title">
-      <h2>伺服器特色</h2>
-      <span class="badge">Bedrock Edition</span>
-    </div>
-    <div class="cards">
-      <article class="card">
-        <h3>純原版生存，成就可解</h3>
-        <p class="muted">無外掛、無作弊，原汁原味的挑戰與成就感。</p>
-        <div class="kpi" data-counter="days" data-value="8000">0</div>
-        <div class="muted">世界存檔天數+</div>
-      </article>
-      <article class="card">
-        <h3>友善建築/機器保護</h3>
-        <p class="muted">領地與紅石機器保護，防止惡意破壞；管理團隊定期巡檢。</p>
-      </article>
-      <article class="card">
-        <h3>大量工業生電</h3>
-        <p class="muted">刷怪塔、鐵農、金農、竹/甘蔗/海帶全自動，集中倉儲與物流匯流。</p>
-      </article>
-      <article class="card">
-        <h3>社群活躍</h3>
-        <p class="muted">Discord 同步公告、新手指引與建築分享，活動舉辦。</p>
-      </article>
-      <article class="card">
-        <h3>效能與穩定</h3>
-        <p class="muted">伺服器針對 Tick/實體/紅石調校，提供流暢體驗。</p>
-      </article>
-      <article class="card">
-        <h3>玩家導向規範</h3>
-        <p class="muted">尊重建築、拒絕破壞；鼓勵合作、大型公共計畫與風格統整。</p>
-      </article>
+  <section id="features">
+    <div class="container">
+      <div class="section-title">
+        <h2>伺服器特色</h2>
+        <span class="badge">Bedrock Edition</span>
+      </div>
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-content">
+            <h3>純原版生存，成就可解</h3>
+            <p class="muted">無外掛、無作弊，原汁原味的挑戰與成就感。累積至今已超過 <span class="kpi" data-counter="days" data-value="8000">0</span> 天的世界存檔。</p>
+            <a href="#join" class="btn ghost">立即體驗</a>
+          </div>
+          <div class="feature-image">
+            <img src="原版.png" alt="純原版生存圖示">
+          </div>
+        </div>
+
+        <div class="feature-item reverse">
+          <div class="feature-content">
+            <h3>友善建築/機器保護</h3>
+            <p class="muted">領地與紅石機器保護，防止惡意破壞；管理團隊定期巡檢，確保遊戲環境穩定。</p>
+            <a href="#faq" class="btn ghost">了解保護機制</a>
+          </div>
+          <div class="feature-image">
+            <img src="保護.png" alt="建築保護圖示">
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-content">
+            <h3>大量工業生電</h3>
+            <p class="muted">刷怪塔、鐵農、金農、竹/甘蔗/海帶全自動，集中倉儲與物流匯流，滿足你的各種需求。</p>
+            <a href="#join" class="btn ghost">加入一起玩</a>
+          </div>
+          <div class="feature-image">
+            <img src="生電.png" alt="生電機器圖示">
+          </div>
+        </div>
+
+        <div class="feature-item reverse">
+          <div class="feature-content">
+            <h3>社群活躍</h3>
+            <p class="muted">Discord 同步公告、新手指引與建築分享，定期舉辦各種趣味活動，讓你不再孤單。</p>
+            <a href="https://discord.gg/d73JnBQksg" target="_blank" rel="noopener" class="btn ghost">加入 Discord</a>
+          </div>
+          <div class="feature-image">
+            <img src="社群.png" alt="社群互動圖示">
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- 城鎮 -->
   <section id="towns" class="container">
     <div class="section-title">
       <h2>城鎮巡禮</h2>
       <span class="badge">桃花源 · 新城 · 櫻花鎮</span>
     </div>
 
-    <!-- 桃花源 -->
     <div class="town">
       <div class="summary">
         <h3>桃花源</h3>
@@ -294,7 +397,6 @@
       </div>
     </div>
 
-    <!-- 新城 -->
     <div class="town">
       <div class="summary">
         <h3>新城</h3>
@@ -326,7 +428,6 @@
       </div>
     </div>
 
-    <!-- 櫻花鎮 -->
     <div class="town">
       <div class="summary">
         <h3>櫻花鎮</h3>
@@ -359,13 +460,8 @@
     </div>
   </section>
 
-  <!-- 加入我們 -->
-  <section id="join" class="container">
-    <div class="section-title">
-      <h2>加入我們</h2>
-      <span class="badge">一起開拓、建造、紀錄</span>
-    </div>
-    <div class="cta">
+  <section id="join">
+    <div class="container cta">
       <div>
         <h3>Discord 社群</h3>
         <p class="muted">最新公告、申請入服、建築分享與技術交流，都在這裡：</p>
@@ -375,23 +471,22 @@
       </div>
       <div>
         <h3>伺服器連線</h3>
-        <p class="muted">請加入來獲取IP或連結</p>
+        <p class="muted">請加入 Discord 以獲取 IP 或連結。</p>
         <div class="copy">
           <span>IP：</span>
-          <code id="ipText">None</code>
-          <button class="btn ghost" id="copyIp">複製</button>
+          <code id="ipText">請加入 Discord 獲取</code>
+          <button class="btn ghost" id="copyIp" disabled>複製</button>
         </div>
         <div class="copy" style="margin-top:8px;">
           <span>Port：</span>
-          <code id="portText">None</code>
-          <button class="btn ghost" id="copyPort">複製</button>
+          <code id="portText">請加入 Discord 獲取</code>
+          <button class="btn ghost" id="copyPort" disabled>複製</button>
         </div>
-        <small class="muted">平台：Minecraft Bedrock（行動/Windows/主機皆可）</small>
+        <small class="muted" style="display:block; margin-top: 8px;">平台：Minecraft Bedrock（行動/Windows/主機皆可）</small>
       </div>
     </div>
   </section>
 
-  <!-- FAQ -->
   <section id="faq" class="container">
     <div class="section-title">
       <h2>常見問題</h2>
@@ -417,20 +512,16 @@
     </div>
   </section>
 
-  <!-- 頁腳 -->
   <footer class="footer">
     <div class="container">
-      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap: wrap;">
-        <div>© <span id="year"></span> HC基岩伺服器 · 一起把世界變好看</div>
-        <div style="display:flex; gap:10px; align-items:center;">
-          <a href="https://discord.gg/d73JnBQksg" target="_blank" rel="noopener">Discord</a>
-          <button id="themeToggle2" class="theme-toggle" aria-label="切換主題" title="切換深/淺色">🌓</button>
-        </div>
+      <div>© <span id="year"></span> HC基岩伺服器 · 一起把世界變好看</div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <a href="https://discord.gg/d73JnBQksg" target="_blank" rel="noopener">Discord</a>
+        <button id="themeToggle2" class="theme-toggle" aria-label="切換主題" title="切換深/淺色">🌓</button>
       </div>
     </div>
   </footer>
 
-  <!-- 回到頂部 -->
   <button class="top-btn" id="backTop" title="回到頂部">↑</button>
 
   <script>
@@ -441,10 +532,17 @@
       if (mode === 'light') document.documentElement.setAttribute('data-theme', 'light');
       else document.documentElement.removeAttribute('data-theme'); // 預設深色
       localStorage.setItem('theme', mode);
+      // 更新按鈕的圖標
+      const themeToggleButtons = document.querySelectorAll('.theme-toggle');
+      themeToggleButtons.forEach(btn => {
+          btn.textContent = mode === 'light' ? '🌙' : '☀️';
+      });
     };
+
+    // 設置初始主題
     if (savedTheme === 'light') applyTheme('light');
     else if (savedTheme === 'dark') applyTheme('dark');
-    else applyTheme(prefersDark ? 'dark' : 'light'); // 初始以系統
+    else applyTheme(prefersDark ? 'dark' : 'light'); // 初始以系統偏好
 
     const toggleTheme = () => {
       const isLight = document.documentElement.getAttribute('data-theme') === 'light';
@@ -453,39 +551,78 @@
     document.getElementById('themeToggle').addEventListener('click', toggleTheme);
     document.getElementById('themeToggle2').addEventListener('click', toggleTheme);
 
+    // ========== 頁面滾動時觸發動畫 ==========
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1 // 當元素的部分進入視窗時觸發
+    };
+
+    const observerCallback = (entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target); // 觸發一次後停止觀察
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    // 觀察首屏圖片
+    const heroVisual = document.querySelector('.hero-visual');
+    if (heroVisual) observer.observe(heroVisual);
+
+    // 觀察特色區塊
+    document.querySelectorAll('.feature-item').forEach(item => {
+      observer.observe(item);
+    });
+
     // ========== 自動捲動橫向相簿 ==========
-    // 對每個 .carousel 啟用自動播放（可滑動 / 可滑鼠暫停 / 末端回到開頭）
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     document.querySelectorAll('.carousel[data-autoplay="true"]').forEach((el) => {
       let timer = null;
-      let paused = false;
+      let paused = false; // 追蹤滑鼠是否停留在輪播上
 
       const step = () => {
         if (paused) return;
-        const max = el.scrollWidth - el.clientWidth;
-        const next = el.scrollLeft + Math.max(240, Math.min(560, el.clientWidth * 0.8));
-        if (next >= max - 5) {
+        const maxScrollLeft = el.scrollWidth - el.clientWidth;
+        // 計算下一個捲動位置：可以是固定的距離，或是視窗寬度的比例
+        const scrollAmount = Math.max(240, Math.min(560, el.clientWidth * 0.8));
+        let nextScrollLeft = el.scrollLeft + scrollAmount;
+
+        if (nextScrollLeft >= maxScrollLeft - 5) { // 接近結尾時，平滑捲回開頭
           el.scrollTo({ left: 0, behavior: 'smooth' });
         } else {
-          el.scrollTo({ left: next, behavior: 'smooth' });
+          el.scrollTo({ left: nextScrollLeft, behavior: 'smooth' });
         }
       };
 
       const start = () => {
-        if (reduceMotion) return;
-        clearInterval(timer);
-        timer = setInterval(step, 3500);
+        if (reduceMotion) return; // 如果偏好減少動態效果，則不啟用自動播放
+        clearInterval(timer); // 先清除舊計時器
+        timer = setInterval(step, 3500); // 每 3.5 秒捲動一次
       };
       const stop = () => { clearInterval(timer); };
 
+      // 監聽滑鼠事件，暫停自動捲動
       el.addEventListener('mouseenter', () => { paused = true; });
       el.addEventListener('mouseleave', () => { paused = false; });
-      el.addEventListener('pointerdown', () => { paused = true; });
-      el.addEventListener('pointerup', () => { paused = false; });
+      // 觸控事件也需要處理
+      el.addEventListener('touchstart', () => { paused = true; });
+      el.addEventListener('touchend', () => { paused = false; });
+      el.addEventListener('touchcancel', () => { paused = false; });
 
-      start();
-      // 視窗大小改變時重新計時
-      window.addEventListener('resize', () => { start(); }, { passive: true });
+
+      start(); // 初始啟動
+
+      // 視窗大小改變時重新計算並啟動計時器，確保適應性
+      window.addEventListener('resize', () => {
+          stop(); // 先停止，重新計算後再啟動
+          start();
+      }, { passive: true });
+
+      // 當頁面切換或隱藏時，暫停計時器
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) stop(); else start();
       });
@@ -493,30 +630,53 @@
 
     // ========== 計數動畫 ==========
     const animateCounter = (el, target, duration = 1200) => {
-      const start = performance.now();
-      const from = 0;
-      const run = (now) => {
-        const p = Math.min(1, (now - start) / duration);
-        const val = Math.floor(from + (target - from) * (1 - Math.pow(1 - p, 3))); // easeOutCubic
-        el.textContent = val.toLocaleString();
-        if (p < 1) requestAnimationFrame(run);
+      const startTimestamp = performance.now();
+      const from = 0; // 從 0 開始計數
+      const run = (currentTime) => {
+        const elapsed = currentTime - startTimestamp;
+        const progress = Math.min(1, elapsed / duration); // 動畫進度 0 到 1
+        // 使用 easeOutCubic easing function，讓動畫從快到慢
+        const easedProgress = 1 - Math.pow(1 - progress, 3);
+        const currentValue = Math.floor(from + (target - from) * easedProgress);
+        el.textContent = currentValue.toLocaleString(); // 顯示帶有千分位符號的數字
+        if (progress < 1) requestAnimationFrame(run); // 未完成則繼續下一幀
       };
-      requestAnimationFrame(run);
+      requestAnimationFrame(run); // 開始動畫
     };
     const daysEl = document.querySelector('[data-counter="days"]');
-    if (daysEl) animateCounter(daysEl, Number(daysEl.dataset.value || 8000));
+    if (daysEl) {
+      const initialValue = Number(daysEl.dataset.value || 8000);
+      // 創建一個 Intersection Observer 來觸發計數動畫
+      const counterObserver = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            animateCounter(daysEl, initialValue);
+            obs.unobserve(entry.target); // 觸發一次後停止觀察
+          }
+        });
+      }, { threshold: 0.5 }); // 當元素一半進入視窗時觸發
+      counterObserver.observe(daysEl);
+    }
 
     // ========== 複製 IP/Port ==========
     const copyBtn = (btnId, targetId) => {
       const btn = document.getElementById(btnId);
-      const text = document.getElementById(targetId);
-      btn?.addEventListener('click', async () => {
+      const textElement = document.getElementById(targetId);
+      if (!btn || !textElement) return;
+
+      btn.addEventListener('click', async () => {
+        const textToCopy = textElement.textContent.trim();
+        if (textToCopy === '請加入 Discord 獲取' || textToCopy === '') {
+          alert('請先加入 Discord 以獲取伺服器詳細資訊。');
+          return;
+        }
         try {
-          await navigator.clipboard.writeText(text.textContent.trim());
-          btn.textContent = '已複製 ✓';
-          setTimeout(() => btn.textContent = '複製', 1200);
+          await navigator.clipboard.writeText(textToCopy);
+          btn.textContent = '已複製 ✓'; // 顯示成功提示
+          setTimeout(() => btn.textContent = '複製', 1200); // 1.2 秒後恢復原樣
         } catch (e) {
-          alert('複製失敗，請手動選取文字。');
+          console.error('複製失敗: ', e);
+          alert('複製失敗，請嘗試手動選取文字並複製。');
         }
       });
     };
@@ -525,10 +685,26 @@
 
     // ========== 回到頂部 ==========
     const backTop = document.getElementById('backTop');
+    // 顯示/隱藏回到頂部按鈕
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) { // 滾動超過 300px 時顯示
+        backTop.style.display = 'grid';
+      } else {
+        backTop.style.display = 'none';
+      }
+    }, { passive: true }); // 使用 passive: true 提升滾動效能
+
     backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // 自動填寫年份
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // 初始加載時，確保主題按鈕正確顯示圖標
+    const currentTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+    const themeToggleButtons = document.querySelectorAll('.theme-toggle');
+    themeToggleButtons.forEach(btn => {
+        btn.textContent = currentTheme === 'light' ? '🌙' : '☀️';
+    });
   </script>
 </body>
-
 </html>
-
